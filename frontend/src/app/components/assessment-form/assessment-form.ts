@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit ,ChangeDetectorRef} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
@@ -20,7 +20,7 @@ export class AssessmentForm implements OnInit {
   controls: any[] = [];
   responses: { [key: string]: string } = {}; // Object to track answers by control ID
 
-  constructor(private apiService: ApiService, private router: Router) {}
+  constructor(private apiService: ApiService, private router: Router, private cdRef: ChangeDetectorRef) {}
 
   ngOnInit() {
     // Fetch the NIST controls from the backend when the component loads
@@ -31,6 +31,7 @@ export class AssessmentForm implements OnInit {
         this.controls.forEach(c => {
           this.responses[c._id] = 'Not Implemented';
         });
+        this.cdRef.detectChanges();
       },
       error: (err) => console.error('Error fetching controls', err)
     });
