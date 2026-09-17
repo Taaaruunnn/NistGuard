@@ -92,6 +92,14 @@ npm run dev                 # http://localhost:5000
 findings. Without `--wipe` it only upserts the taxonomy, so existing user data
 survives a re-seed.
 
+Optionally load a realistic demo assessment so the dashboard and report have
+something to show without answering 106 questions by hand:
+
+```bash
+npm run demo          # creates demo@nistguard.local / demopassword
+npm run demo -- you@you.com yourpassword   # or attach it to your own account
+```
+
 Verify the whole API end to end (80 assertions, needs the server running):
 
 ```bash
