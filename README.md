@@ -195,14 +195,36 @@ Deploy as **two separate Vercel projects** from this one repository.
 `backend/vercel.json` routes everything to `server.js`, which exports the
 Express app and only calls `app.listen` when run directly.
 
-### Step 2 — seed the production database
+### Step 2 — check the database name (usually nothing to do)
 
-The seeder is a local script; point it at the same database once:
+The taxonomy lives in MongoDB, not in the deployment, so if Vercel points at the
+same Atlas database you already seeded locally, **it is already seeded — skip
+this step.**
+
+The thing to get right is the database name in the URI. Mongoose takes it from
+the URI path, and with no path it silently falls back to `test`:
+
+| `MONGO_URI` set in Vercel | Database used |
+| --- | --- |
+| `...mongodb.net/nistguard?retryWrites=...` | `nistguard` — the one you seeded |
+| `...mongodb.net/?retryWrites=...` | `test` — empty |
+
+Copy the value from your local `backend/.env`, which already has the path on it,
+rather than the bare string Atlas shows in its "Connect" dialog. Getting this
+wrong fails quietly: the deploy succeeds and login works, but every reference
+lookup comes back empty.
+
+Only if you deliberately want production on a *separate* database (say
+`/nistguard_prod`, to keep it away from local experiments) do you need to seed
+it, by pointing the local script at it once:
 
 ```bash
 cd backend
-MONGO_URI="<your atlas uri>" npm run seed
+MONGO_URI="<the production uri>" npm run seed
 ```
+
+Either way, confirm it with `https://<your-api>/api/nist/core`, which should
+report `{"functions":6,"categories":22,"subcategories":106}`.
 
 ### Step 3 — frontend
 
