@@ -18,7 +18,7 @@ import { IconComponent } from '../../shared/icon';
       heading="Let's map where you stand"
       blurb="Two minutes to set up. The first assessment can be as short or as thorough as you want."
     >
-      <form (ngSubmit)="submit()" class="space-y-7">
+      <form (ngSubmit)="submit()" class="auth-form">
         <div>
           <label for="name" class="section-mark mb-2 block">Your name</label>
           <input id="name" name="name" type="text" autocomplete="name" required class="field" placeholder="Alex Mercer" [(ngModel)]="name" />
@@ -46,16 +46,16 @@ import { IconComponent } from '../../shared/icon';
             placeholder="At least 8 characters"
             [(ngModel)]="password"
           />
-          <p class="mt-2 text-[11px] text-[var(--color-ink-3)]">Eight characters or more. Nothing else is required.</p>
+          <p class="auth-hint mt-2 text-[11px] text-[var(--color-ink-3)]">Eight characters or more. Nothing else is required.</p>
         </div>
 
         @if (error()) {
-          <p class="border-l-2 border-[var(--color-accent)] py-1 pl-3 text-[12px] text-[var(--color-accent)]">
+          <p class="auth-form-wide border-l-2 border-[var(--color-accent)] py-1 pl-3 text-[12px] text-[var(--color-accent)]">
             {{ error() }}
           </p>
         }
 
-        <div class="flex items-center gap-5 pt-1">
+        <div class="auth-form-wide flex items-center gap-5 pt-1">
           <button type="submit" class="btn btn-primary" [disabled]="busy()">
             {{ busy() ? 'Creating...' : 'Create account' }}
             @if (!busy()) {

@@ -18,10 +18,16 @@ import { IconComponent } from './icon';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="min-h-screen">
+      <!--
+        The masthead is pinned for every signed-in route. It is sticky rather
+        than fixed because the body is the scrolling element here, so the
+        content below needs no padding compensation.
+      -->
+      <div class="masthead no-print">
       <!-- a claret hairline at the very top edge, like a printed trim mark -->
-      <div class="h-[3px] bg-[var(--color-accent)] no-print"></div>
+      <div class="h-[3px] bg-[var(--color-accent)]"></div>
 
-      <header class="mx-auto max-w-[1180px] px-6 pt-5 pb-3 no-print">
+      <header class="mx-auto max-w-[1180px] px-6 pt-5 pb-3">
         <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
           <div class="flex items-baseline gap-4">
             <a routerLink="/dashboard" class="group flex items-baseline gap-2.5">
@@ -49,8 +55,9 @@ import { IconComponent } from './icon';
         </div>
       </header>
 
-      <div class="mx-auto max-w-[1180px] px-6 no-print">
+      <div class="mx-auto max-w-[1180px] px-6">
         <div class="h-px bg-[var(--color-rule-strong)]"></div>
+      </div>
       </div>
 
       <main class="mx-auto max-w-[1180px] px-6 pb-24" [class.pt-8]="padded()">

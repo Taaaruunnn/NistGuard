@@ -24,7 +24,7 @@ import { IconComponent } from '../../shared/icon';
         </p>
       }
 
-      <form (ngSubmit)="submit()" class="space-y-7">
+      <form (ngSubmit)="submit()" class="auth-form">
         <div>
           <label for="email" class="section-mark mb-2 block">Email</label>
           <input
@@ -54,12 +54,12 @@ import { IconComponent } from '../../shared/icon';
         </div>
 
         @if (error()) {
-          <p class="border-l-2 border-[var(--color-accent)] py-1 pl-3 text-[12px] text-[var(--color-accent)]">
+          <p class="auth-form-wide border-l-2 border-[var(--color-accent)] py-1 pl-3 text-[12px] text-[var(--color-accent)]">
             {{ error() }}
           </p>
         }
 
-        <div class="flex items-center gap-5 pt-1">
+        <div class="auth-form-wide flex items-center gap-5 pt-1">
           <button type="submit" class="btn btn-primary" [disabled]="busy()">
             {{ busy() ? 'Signing in...' : 'Sign in' }}
             @if (!busy()) {

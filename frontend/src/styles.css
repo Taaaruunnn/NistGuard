@@ -52,6 +52,11 @@
   --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
   --font-sans:    'IBM Plex Sans', system-ui, -apple-system, sans-serif;
   --font-mono:    'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Height of the sticky masthead (trim + header + rule). Anything else that
+     sticks to the top of the page offsets itself by this so it does not slide
+     underneath the navbar. */
+  --nav-h: 70px;
 }
 
 @layer base {
@@ -222,6 +227,143 @@
   .figure {
     font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
+  }
+
+  /* ======================================================================
+     Sticky masthead
+     ----------------------------------------------------------------------
+     The navbar lives in normal document flow (the body is what scrolls), so
+     position: sticky is enough -- no fixed positioning, and therefore no
+     padding compensation on the content below. It carries its own paper
+     background, repeating the body's dot texture so the band does not read
+     as a flat panel sliding over a textured page.
+     ====================================================================== */
+  .masthead {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background-color: var(--color-paper);
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(28, 25, 23, 0.028) 1px, transparent 0),
+      radial-gradient(circle at 1px 1px, rgba(140, 47, 39, 0.018) 1px, transparent 0);
+    background-size: 22px 22px, 37px 37px;
+    background-position: 0 0, 11px 7px;
+  }
+
+  /* ======================================================================
+     Auth pages -- locked to exactly one viewport, never scrollable
+     ----------------------------------------------------------------------
+     height is pinned (not min-height) so the page cannot grow with content,
+     and overflow is hidden so a scrollbar can never reappear. Because that
+     means content must genuinely fit, everything below compacts at shorter
+     viewport heights rather than being allowed to overflow: spacing and type
+     step down, then the editorial column sheds its lower blocks, then it is
+     dropped entirely. A landscape phone therefore gets just the form.
+     ====================================================================== */
+  .auth-shell {
+    height: 100vh;         /* fallback for browsers without dvh */
+    height: 100dvh;        /* tracks mobile browser chrome and the keyboard */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .auth-stage {
+    flex: 1 1 auto;
+    min-height: 0;         /* lets the flex child actually shrink */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1.5rem;
+  }
+
+  .auth-grid {
+    width: 100%;
+    max-width: 1180px;
+    display: grid;
+    gap: 3rem;
+  }
+
+  .auth-panel-head { margin-bottom: 2rem; }
+  .auth-form > * + * { margin-top: 1.75rem; }
+
+  /* -- shorter viewports: compact before anything is allowed to clip ----- */
+  @media (max-height: 860px) {
+    .auth-stage { padding: 1.5rem; }
+    .auth-form > * + * { margin-top: 1.3rem; }
+    .auth-panel-head { margin-bottom: 1.5rem; }
+    .auth-compact-lg { display: none; }   /* the framework footnote */
+  }
+
+  @media (max-height: 740px) {
+    .auth-stage { padding: 1.25rem 1.5rem; }
+    .auth-form > * + * { margin-top: 1.05rem; }
+    .auth-panel-head { margin-bottom: 1.15rem; }
+    .auth-headline { font-size: clamp(2rem, 4.2vw, 3rem); }
+    .auth-lede { display: none; }          /* the supporting paragraph */
+  }
+
+  @media (max-height: 640px) {
+    .auth-stage { padding: 1rem 1.25rem; }
+    .auth-form > * + * { margin-top: 0.8rem; }
+    .auth-panel-head { margin-bottom: 0.9rem; }
+    .auth-compact-md { display: none; }    /* the six-function grid */
+  }
+
+  /* A landscape phone has no room for the editorial column at all. Below this
+     height the form is all that is left, and it is compressed hard: the blurb
+     and the field hints go, and the controls themselves tighten up. This is the
+     deliberate trade -- shed chrome, never hand back a scrollbar. */
+  @media (max-height: 560px) {
+    .auth-editorial { display: none !important; }
+    .auth-grid { grid-template-columns: minmax(0, 1fr) !important; max-width: 460px; }
+    .auth-stage { padding: 0.75rem 1.25rem; }
+    .auth-blurb,
+    .auth-hint { display: none; }
+    .auth-panel-heading { font-size: 1.25rem; }
+    .auth-panel-head { margin-bottom: 0.7rem; }
+    .auth-form > * + * { margin-top: 0.6rem; }
+    .auth-form label { margin-bottom: 0.15rem; }
+    .auth-form .field { padding-top: 0.3rem; padding-bottom: 0.3rem; }
+    .auth-form .btn { padding-top: 0.45rem; padding-bottom: 0.45rem; }
+  }
+
+  /* The tightest case that still has to work: a narrow portrait phone with the
+     on-screen keyboard open (~390x420). Too narrow to pair the fields into
+     columns, so the last of the decorative chrome goes -- the section mark and
+     a smaller heading -- and the controls tighten again. Every input stays in
+     the DOM; only labelling shrinks. */
+  @media (max-height: 480px) {
+    .auth-panel-head { margin-bottom: 0.5rem; }
+    .auth-panel-head .section-mark { display: none; }
+    .auth-panel-heading { font-size: 1.1rem; }
+    .auth-form > * + * { margin-top: 0.45rem; }
+    .auth-form label { font-size: 10px; }
+    .auth-form .field { padding-top: 0.22rem; padding-bottom: 0.22rem; }
+  }
+
+  /* Landscape phone: wide but very short, so the fields pair up into two
+     columns. Halving the row count is what actually buys the height back. */
+  @media (max-height: 560px) and (min-width: 620px) {
+    .auth-grid { max-width: 620px; }
+    .auth-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 1.75rem;
+      row-gap: 0.6rem;
+      align-items: end;
+    }
+    .auth-form > * + * { margin-top: 0; }
+    .auth-form > .auth-form-wide { grid-column: 1 / -1; }
+  }
+
+  @media (min-width: 1024px) {
+    .auth-grid {
+      grid-template-columns: 7fr 5fr;
+      gap: 4rem;
+      align-items: center;
+    }
   }
 }
 

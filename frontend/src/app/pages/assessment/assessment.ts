@@ -89,7 +89,7 @@ interface Draft {
         <div class="grid gap-x-12 gap-y-10 lg:grid-cols-12">
           <!-- ============================================ function rail -->
           <nav class="lg:col-span-3">
-            <div class="lg:sticky lg:top-8">
+            <div class="lg:sticky lg:top-[calc(var(--nav-h)+1.5rem)]">
               <div class="section-mark mb-4">Functions</div>
               <ul class="border-t border-[var(--color-rule)]">
                 @for (f of core(); track f.code) {
