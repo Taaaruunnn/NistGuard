@@ -7,7 +7,7 @@
  *
  * Local development talks to the Express server on :5000.
  */
-const PRODUCTION_API = 'https://nistguard-api.vercel.app/api';
+const PRODUCTION_API = 'https://nistguard-backend.vercel.app/api';
 
 const isLocalHost =
   typeof window !== 'undefined' &&
