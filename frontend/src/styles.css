@@ -1,3 +1,270 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import 'tailwindcss';
+
+/* ==========================================================================
+   NISTGuard design language -- "audit report on paper"
+   --------------------------------------------------------------------------
+   The whole product is styled as a printed assurance report: a warm paper
+   ground, ink-coloured text, hairline rules instead of drop shadows, square
+   corners, section marks, and one restrained claret accent used sparingly for
+   emphasis. Structure comes from rules and whitespace, not from stacked cards.
+
+   Typography is a deliberate three-way pairing:
+     Fraunces        display serif, optical sizing, used for headings only
+     IBM Plex Sans   plain humanist body text
+     IBM Plex Mono   every CSF identifier (GV.OC-01), tiers and figures
+
+   The six CSF Functions each own a colour, defined once here and used
+   everywhere they appear -- nav, charts, badges, rules, report margins -- so
+   the framework's structure is legible at a glance rather than decorative.
+   ========================================================================== */
+
+@theme {
+  /* -- paper & ink ------------------------------------------------------- */
+  --color-paper:        #faf8f3;
+  --color-paper-2:      #f4f0e7;
+  --color-paper-3:      #ebe5d8;
+  --color-ink:          #1c1917;
+  --color-ink-2:        #514a42;
+  --color-ink-3:        #857c70;
+  --color-rule:         #ded6c6;
+  --color-rule-strong:  #b9ae99;
+
+  /* -- accent: claret, used for emphasis and nothing else ---------------- */
+  --color-accent:       #8c2f27;
+  --color-accent-2:     #b04a3e;
+  --color-accent-wash:  #f3e5e1;
+
+  /* -- the six CSF 2.0 Functions ----------------------------------------- */
+  --color-gv:           #5b4b7d;   /* Govern   -- muted violet */
+  --color-id:           #2f6b5f;   /* Identify -- pine */
+  --color-pr:           #2a5c8a;   /* Protect  -- slate blue */
+  --color-de:           #a9722f;   /* Detect   -- ochre */
+  --color-rs:           #a63d40;   /* Respond  -- brick */
+  --color-rc:           #4e7a3b;   /* Recover  -- moss */
+
+  /* -- severity ---------------------------------------------------------- */
+  --color-sev-low:      #6b7f6a;
+  --color-sev-medium:   #b08544;
+  --color-sev-high:     #b4622f;
+  --color-sev-critical: #8c2f27;
+
+  /* -- type -------------------------------------------------------------- */
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-sans:    'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+  --font-mono:    'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.6;
+    /* A very fine paper tooth. Two offset dot grids, almost subliminal -- it
+       stops the large cream areas reading as flat digital canvas. */
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(28, 25, 23, 0.028) 1px, transparent 0),
+      radial-gradient(circle at 1px 1px, rgba(140, 47, 39, 0.018) 1px, transparent 0);
+    background-size: 22px 22px, 37px 37px;
+    background-position: 0 0, 11px 7px;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    font-variation-settings: 'SOFT' 0, 'WONK' 0;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-paper);
+  }
+
+  /* Keyboard focus is a visible ink ring, never removed. */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  input, select, textarea, button {
+    font-family: inherit;
+    font-size: inherit;
+  }
+}
+
+@layer components {
+  /* -- section mark: the small "§03" that heads each block --------------- */
+  .section-mark {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
+
+  /* -- a ruled heading: label left, hairline filling the rest ------------ */
+  .ruled-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+  .ruled-head::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--color-rule);
+  }
+
+  /* -- form controls, drawn as ruled fields not rounded boxes ------------ */
+  .field {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--color-rule-strong);
+    padding: 0.5rem 0.125rem;
+    color: var(--color-ink);
+    transition: border-color 140ms ease, background-color 140ms ease;
+  }
+  .field::placeholder { color: var(--color-ink-3); }
+  .field:focus {
+    outline: none;
+    border-bottom-color: var(--color-accent);
+    background: rgba(140, 47, 39, 0.03);
+  }
+  .field:focus-visible { outline: none; }
+
+  /* -- buttons ----------------------------------------------------------- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.15rem;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease;
+  }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .btn-primary {
+    background: var(--color-ink);
+    color: var(--color-paper);
+    border-color: var(--color-ink);
+  }
+  .btn-primary:hover:not(:disabled) { background: var(--color-accent); border-color: var(--color-accent); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--color-ink-2);
+    border-color: var(--color-rule-strong);
+  }
+  .btn-ghost:hover:not(:disabled) { color: var(--color-ink); border-color: var(--color-ink); }
+
+  .btn-quiet {
+    background: transparent;
+    color: var(--color-ink-3);
+    border-color: transparent;
+    padding: 0.35rem 0.5rem;
+  }
+  .btn-quiet:hover:not(:disabled) { color: var(--color-accent); }
+
+  /* -- the recurring "stamp": a boxed mono code -------------------------- */
+  .stamp {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    padding: 0.15rem 0.4rem;
+    border: 1px solid currentColor;
+  }
+
+  /* -- ruled data table -------------------------------------------------- */
+  /* Ledgers carry a lot of columns. On a phone they scroll inside their own
+     container rather than forcing the whole page sideways. */
+  .ledger-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .ledger-wrap > .ledger { min-width: 620px; }
+
+  .ledger { width: 100%; border-collapse: collapse; }
+  .ledger th {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+    text-align: left;
+    padding: 0 0.75rem 0.5rem 0;
+    border-bottom: 1px solid var(--color-rule-strong);
+    white-space: nowrap;
+  }
+  .ledger td {
+    padding: 0.7rem 0.75rem 0.7rem 0;
+    border-bottom: 1px solid var(--color-rule);
+    vertical-align: top;
+  }
+  .ledger tbody tr:hover { background: rgba(28, 25, 23, 0.022); }
+
+  /* -- tabular figures for anything numeric ------------------------------ */
+  .figure {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+  .text-pretty  { text-wrap: pretty; }
+
+  /* Hairline rules used constantly in place of borders-on-cards. */
+  .rule-t { border-top: 1px solid var(--color-rule); }
+  .rule-b { border-bottom: 1px solid var(--color-rule); }
+  .rule-l { border-left: 1px solid var(--color-rule); }
+  .rule-r { border-right: 1px solid var(--color-rule); }
+}
+
+/* -- motion ------------------------------------------------------------- */
+@keyframes ng-rise {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes ng-draw {
+  from { stroke-dashoffset: var(--dash, 200); }
+  to   { stroke-dashoffset: 0; }
+}
+@keyframes ng-sweep {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+.animate-rise { animation: ng-rise 340ms cubic-bezier(0.2, 0.7, 0.3, 1) both; }
+.animate-sweep { transform-origin: left center; animation: ng-sweep 520ms cubic-bezier(0.2, 0.7, 0.3, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* -- print: the report page is genuinely printable ---------------------- */
+@media print {
+  body { background: #fff; background-image: none; }
+  .no-print { display: none !important; }
+  .print-break { break-before: page; }
+  a[href]::after { content: ''; }
+}

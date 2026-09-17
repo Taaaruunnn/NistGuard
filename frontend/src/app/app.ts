@@ -1,12 +1,20 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+
+import { AuthService } from './core/services/auth.service';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
   imports: [RouterOutlet],
-  templateUrl: './app.html',
-  styleUrl: './app.css'
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `<router-outlet />`,
 })
 export class App {
-  protected readonly title = signal('frontend');
+  private auth = inject(AuthService);
+
+  constructor() {
+    // Validate any stored token once, before the first guard runs.
+    void this.auth.restore();
+  }
 }

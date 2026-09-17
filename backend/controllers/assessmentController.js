@@ -447,8 +447,8 @@ const getReport = async (req, res) => {
     const narrative = overall.answered === 0
       ? 'No subcategories have been assessed yet, so there is nothing to report on.'
       : [
-          `${assessment.organizationName || 'The organization'} has assessed ${overall.answered} of ${overall.totalSubcategories} CSF 2.0 subcategories`,
-          `(${overall.completion}% coverage), reaching an overall maturity of ${overall.mean} out of ${MAX_TIER}`,
+          `${assessment.organizationName || 'The organization'} has assessed ${overall.answered} of ${overall.totalSubcategories} CSF 2.0 subcategories `,
+          `(${overall.completion}% coverage), reaching an overall maturity of ${overall.mean} out of ${MAX_TIER} `,
           `against a target of ${overall.targetTier} ("${overall.targetLabel}").`,
           weakest ? ` ${weakest.name} is the weakest function at ${weakest.mean},` : '',
           strongest ? ` while ${strongest.name} is strongest at ${strongest.mean}.` : '',
@@ -470,13 +470,13 @@ const getReport = async (req, res) => {
         completedAt: assessment.completedAt,
       },
       methodology: {
-        scale: `0-${MAX_TIER} maturity tiers (${tierLabel(0)} to ${tierLabel(MAX_TIER)}).`,
+        scale: `0–${MAX_TIER} maturity tiers, ${tierLabel(0)} through ${tierLabel(MAX_TIER)}.`,
         rollUp:
           'Function and category scores are unweighted arithmetic means taken across subcategory leaves, so every subcategory carries equal weight regardless of how many sit in its category.',
         exclusions:
           'Unanswered subcategories are excluded from all means rather than counted as zero. Subcategories marked Not Applicable are excluded from means, denominators and findings.',
         prioritisation:
-          'Findings are ranked by priority = gap (in tiers) x business-impact weight (Low 0.75, Moderate 1.0, High 1.5, Critical 2.0), not by severity alone.',
+          'Findings are ranked by priority = gap (in tiers) × business-impact weight (Low 0.75, Moderate 1.0, High 1.5, Critical 2.0), not by severity alone.',
       },
       executiveSummary: narrative,
       overall,

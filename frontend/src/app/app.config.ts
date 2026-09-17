@@ -1,13 +1,21 @@
-import { ApplicationConfig } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
+import { provideRouter, withComponentInputBinding, withInMemoryScrolling } from '@angular/router';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+
 import { routes } from './app.routes';
-import { provideHttpClient, withFetch } from '@angular/common/http'; // <-- 1. Add withFetch here
-import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes),
-    provideHttpClient(withFetch()), // <-- 2. Add withFetch() inside here
-    provideCharts(withDefaultRegisterables())
-  ]
+    provideBrowserGlobalErrorListeners(),
+    provideZonelessChangeDetection(),
+    provideRouter(
+      routes,
+      withComponentInputBinding(),
+      // Route params feed the page components, and the report is long, so
+      // always land at the top on navigation and restore position on back.
+      withInMemoryScrolling({ scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled' })
+    ),
+    provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
+  ],
 };

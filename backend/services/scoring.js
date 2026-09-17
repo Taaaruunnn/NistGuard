@@ -91,7 +91,7 @@ const recommendationFor = (sub, currentTier, targetTier) => {
 
   const habit =
     targetTier >= 3
-      ? ' Reaching "Repeatable" or better means the practice is written down as policy, has a named owner, and is reviewed on a fixed schedule -- not merely performed once.'
+      ? ' Reaching "Repeatable" or better means the practice is written down as policy, has a named owner, and is reviewed on a fixed schedule — not merely performed once.'
       : '';
 
   return `${lead}${step}${habit}`;
