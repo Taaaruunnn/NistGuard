@@ -192,6 +192,15 @@ Deploy as **two separate Vercel projects** from this one repository.
 3. Deploy. Note the URL, e.g. `https://nistguard-api.vercel.app`.
 4. Check `https://<your-api>/api/health` returns `{"status":"success",...}`.
 
+> **Opening the backend URL in a browser looks broken, and is not.** There is no
+> page at `/` — this is an API that serves `/api/*` only, so the root correctly
+> returns `{"message":"No route for GET /"}`. Always health-check `/api/health`
+> or `/api/nist/core`, never `/`.
+>
+> A useful side effect: that exact JSON at `/` comes from this codebase's own
+> 404 handler, so seeing it confirms your current code is deployed. A default
+> `Cannot GET /` HTML page instead means Vercel is serving an older build.
+
 `backend/vercel.json` routes everything to `server.js`, which exports the
 Express app and only calls `app.listen` when run directly.
 
